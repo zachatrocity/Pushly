@@ -1,0 +1,16 @@
+{
+  "name": "pushly",
+  "version": "1.0.0",
+  "description": "A simple terminal app for pushbullet sms",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "lodash": "^4.17.4",
+    "unirest": "^0.5.1"
+  }
+}
