@@ -3,7 +3,7 @@
 This is a simple TUI pushbullet app. It is extremely WIP. Looking for contributors also. 
 This uses [blessed](https://github.com/chjj/blessed) for the TUI stuff.
 
-![Text Based PushBullet](http://link)
+![Text Based PushBullet](https://raw.githubusercontent.com/zachatrocity/Pushly/master/pushly.png)
 
 Right now you can:
 - Load threads
@@ -26,6 +26,7 @@ Thats about it.
 ## Things to do:
 
 - [ ] Modularize the code into multiple files
+- [ ] Add linebreaks to messages
 - [ ] Get textarea to refocus after focus is lost
 - [ ] Get access token rather than hard code it
 - [ ] Add support for group messages
