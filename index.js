@@ -2,6 +2,10 @@ var blessed = require('blessed')
   , screen;
 var unirest = require('unirest');
 
+var ThreadTable = require('./ui/ThreadTable');
+var MessagesTable = require('./ui/MessagesTable');
+var TextField = require('./ui/TextField');
+
 var threads = [[ 'ID', 'Name',  'Message',  'Time']];
 var thread_lookup = {};
 var activeThreadId = '';
@@ -14,85 +18,10 @@ screen = blessed.screen({
   warnings: true
 });
 
-var thread_table = blessed.listtable({
-  parent: screen,
-  left: 0,
-  top: 0,
-  width: '30%',
-  height: '100%',
-  noCellBorders: true,
-  border: {
-    type: 'line',
-    left: true,
-    top: true,
-    right: false,
-    bottom: true
-  },
-  align: 'left',
-  tags: true,
-  keys: true,
-  vi: true,
-  mouse: true,
-  style: {
-    header: {
-      fg: 'blue',
-      bold: true
-    },
-    cell: {
-      fg: '#4CD964',
-      selected: {
-        bg: 'gray'
-      }
-    }
-  }
-});
-
-var message_table = blessed.list({
-  parent: screen,
-  left: '30%-1',
-  top: 0,
-  width: '70%+2',
-  height: '100%',
-  padding: {
-    left: 2,
-    top: 2,
-    right: 2,
-    bottom: 2
-  },
-  border: {
-    type: 'line',
-    left: true,
-    top: true,
-    right: true,
-    bottom: true
-  },
-  tags: true,
-  keys: true,
-  vi: true,
-  mouse: true
-});
-
-var text_input = blessed.textarea({
-  parent: screen,
-  left: '30%-1',
-  bottom: 0,
-  width: '70%+2',
-  height: '15%',
-  border: {
-    type: 'line',
-    left: true,
-    top: true,
-    right: true,
-    bottom: true
-  },
-  tags: true,
-  keys: true,
-  vi: true,
-  mouse: true
-});
-
-thread_table.setLabel({text:'Threads',side:'left'});
-message_table.setLabel({text:'Message',side:'left'})
+//UI components
+var thread_table = new ThreadTable(screen);
+var message_table = new MessagesTable(screen);
+var text_input = new TextField(screen);
 
 
 unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_threads')
