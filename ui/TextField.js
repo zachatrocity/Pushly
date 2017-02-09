@@ -19,8 +19,8 @@ function TextField (screen) {
         bottom: true
     },
     tags: true,
-    keys: true,
-    vi: true,
+    keys: false,
+    vi: false,
     mouse: true
   }
   blessed.widget.Textarea.call(self, opts);

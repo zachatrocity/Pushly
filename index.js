@@ -1,6 +1,7 @@
 var blessed = require('blessed')
   , screen;
 var unirest = require('unirest');
+var open = require('open');
 const notifier = require('node-notifier');
 
 var ThreadTable = require('./ui/ThreadTable');
@@ -10,7 +11,7 @@ var TextField = require('./ui/TextField');
 var threads = [[ 'ID', 'Name',  'Message',  'Time']];
 var thread_lookup = {};
 var activeThreadId = '';
-var ACCESS_TOKEN = 'o.q0t9XH3U6z9707PxTfDhFGkggkjR3y2p'
+var ACCESS_TOKEN = 'o.2VHAXKj16SYnTIaBW3Wwu8IMDHs7J4oB'
 var TARGET_DEVICE = 'ujv5QM4Sl7QsjzW4aHTNF6';
 
 screen = blessed.screen({
@@ -73,11 +74,24 @@ thread_table.on('select', function(elm, index){
             var msg = response.body.thread[index].body;
 
             if (response.body.thread[index].direction == 'outgoing'){
-                message_table.addItem("{#007AFF-fg}You:{/} " + msg);
+                var items = ("{#007AFF-fg}You:{/} " + msg).match(new RegExp('.{1,' + (message_table.width - 1) + '}', 'g'));
+                for (var i = 0; i < items.length; i++){
+                    message_table.addItem(items[i] + '\n');
+                }
             } else {
+                if(response.body.thread[index].image_urls){
+                    //it has images
+                    for (x = 0; x < response.body.thread[index].image_urls.length; x++){
+                        msg = response.body.thread[index].image_urls + '\n' + msg;
+                    }
+                }
                 var recipient_idx = response.body.thread[index].recipient_index != undefined ? response.body.thread[index].recipient_index : 0;
                 name = thread_lookup[thread_id].recipients[recipient_idx].name;
-                message_table.addItem("{#4CD964-fg}" + name + "{/}: " + msg);
+                
+                var items = ("{#4CD964-fg}" + name + "{/}: " + msg).match(new RegExp('.{1,' + (message_table.width - 1) + '}', 'g'));
+                for (var i = 0; i < items.length; i++){
+                    message_table.addItem(items[i] + '\n');
+                }
             }
         }
         message_table.setLabel({text:'Message with ' + name,side:'left'})
@@ -94,7 +108,8 @@ thread_table.on('select', function(elm, index){
 text_input.key('enter', sendMessage);
 
 text_input.on('click', function(){
-    text_input.focus();
+    text_input.readInput();
+    screen.render();
 });
 
 function sendMessage(e, i){
@@ -122,6 +137,8 @@ function sendMessage(e, i){
             message_table.addItem("{#007AFF-fg}You:{/} " + JSON.parse(response.request.body).push.message);
             //scroll to bottom
             message_table.setScrollPerc(100);
+            text_input.clearValue();
+            text_input.readInput();
         }
     });
 
