@@ -11,6 +11,7 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "lodash": "^4.17.4",
+    "node-notifier": "^5.0.2",
     "unirest": "^0.5.1"
   }
 }

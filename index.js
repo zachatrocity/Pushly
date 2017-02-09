@@ -1,6 +1,7 @@
 var blessed = require('blessed')
   , screen;
 var unirest = require('unirest');
+const notifier = require('node-notifier');
 
 var ThreadTable = require('./ui/ThreadTable');
 var MessagesTable = require('./ui/MessagesTable');
@@ -30,7 +31,14 @@ unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_thre
 .end(function (response) {
   for (var index = 0; index < response.body.threads.length; index++) {
       var thread = response.body.threads[index];
-      var recipient = thread.recipients[0].name;
+      var recipient = '';
+      thread.recipients.forEach(function(elm, i){
+          if (i < thread.recipients.length - 1){
+              recipient += (elm.name + ', ')
+          } else {
+              recipient += elm.name
+          }
+      })
       var body = '';
       var time = '';
       if (thread.latest){
@@ -41,7 +49,6 @@ unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_thre
         var seconds = "0" + date.getSeconds();
         time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
       }
-      
       
       threads.push([String(thread.id), String(recipient), String(body), String(time)]);
       thread_lookup[thread.id] = thread;
@@ -68,7 +75,8 @@ thread_table.on('select', function(elm, index){
             if (response.body.thread[index].direction == 'outgoing'){
                 message_table.addItem("{#007AFF-fg}You:{/} " + msg);
             } else {
-                name = thread_lookup[thread_id].recipients[0].name;
+                var recipient_idx = response.body.thread[index].recipient_index != undefined ? response.body.thread[index].recipient_index : 0;
+                name = thread_lookup[thread_id].recipients[recipient_idx].name;
                 message_table.addItem("{#4CD964-fg}" + name + "{/}: " + msg);
             }
         }
