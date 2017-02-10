@@ -4,6 +4,7 @@ var unirest = require('unirest');
 var open = require('open');
 var PushBullet = require('pushbullet');
 const notifier = require('node-notifier');
+const path = require('path');
 
 
 var ThreadTable = require('./ui/ThreadTable');
@@ -46,7 +47,7 @@ stream.on('push', function(push) {
             body = push.body;
             break;
         case "sms_changed":
-            if (push.notifications){
+            if (push.notifications.length > 0){
                 title = push.notifications[0].title;
                 body = push.notifications[0].body;
             }
@@ -57,7 +58,8 @@ stream.on('push', function(push) {
 
     notifier.notify({
         'title': title,
-        'message': body
+        'message': body,
+        'icon': path.join(__dirname, 'pushly_icon.png')
     });
 });
 
