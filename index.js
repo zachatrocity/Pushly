@@ -23,7 +23,14 @@ screen = blessed.screen({
 //UI components
 var thread_table = new ThreadTable(screen);
 var message_table = new MessagesTable(screen);
+
 var text_input = new TextField(screen);
+text_input.key('enter', sendMessage);
+
+text_input.on('click', function(){
+    text_input.readInput();
+    screen.render();
+});
 
 
 unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_threads')
@@ -96,21 +103,13 @@ thread_table.on('select', function(elm, index){
         }
         message_table.setLabel({text:'Message with ' + name,side:'left'})
         activeThreadId = thread_id;
+        message_table.focus();
+        message_table.render();
+        message_table.setScrollPerc(100);
+        text_input.readInput();
+        screen.render();
     });
-
-    message_table.focus();
-    message_table.render();
-    message_table.setScrollPerc(100);
-    text_input.readInput();
-    screen.render();
 })
-
-text_input.key('enter', sendMessage);
-
-text_input.on('click', function(){
-    text_input.readInput();
-    screen.render();
-});
 
 function sendMessage(e, i){
     var msg = text_input.getContent().trim();
