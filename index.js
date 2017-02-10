@@ -2,7 +2,9 @@ var blessed = require('blessed')
   , screen;
 var unirest = require('unirest');
 var open = require('open');
+var PushBullet = require('pushbullet');
 const notifier = require('node-notifier');
+
 
 var ThreadTable = require('./ui/ThreadTable');
 var MessagesTable = require('./ui/MessagesTable');
@@ -14,11 +16,61 @@ var activeThreadId = '';
 var ACCESS_TOKEN = 'o.2VHAXKj16SYnTIaBW3Wwu8IMDHs7J4oB'
 var TARGET_DEVICE = 'ujv5QM4Sl7QsjzW4aHTNF6';
 
+var pusher = new PushBullet(ACCESS_TOKEN);
+var stream = pusher.stream();
+
+stream.on('connect', function() {
+    // stream has connected
+    
+});
+
+stream.on('close', function() {
+    // stream has disconnected
+   
+});
+
+stream.on('error', function(error) {
+    // stream error
+    console.log(error);
+});
+
+stream.on('push', function(push) {
+    // push message received
+
+    var title = '';
+    var body = '';
+
+    switch (push.type) {
+        case "mirror":
+            title = push.title;
+            body = push.body;
+            break;
+        case "sms_changed":
+            if (push.notifications){
+                title = push.notifications[0].title;
+                body = push.notifications[0].body;
+            }
+            break;
+        default:
+            break;
+    }
+
+    notifier.notify({
+        'title': title,
+        'message': body
+    });
+});
+
+stream.connect();
+
+
 screen = blessed.screen({
   smartCSR: true,
   dockBorders: true,
   warnings: true
 });
+
+//Stream components
 
 //UI components
 var thread_table = new ThreadTable(screen);

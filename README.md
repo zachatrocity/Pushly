@@ -24,13 +24,15 @@ Thats about it.
 
 
 ## Things to do:
-- [ ] Hookup the stream/socket (https://docs.pushbullet.com/#realtime-event-stream)
+- [x] Hookup the stream/socket (https://docs.pushbullet.com/#realtime-event-stream)
 - [ ] Add support for encryption
 - [x] Modularize the code into multiple files
 - [x] Add linebreaks to messages
-- [ ] Add notifications (https://github.com/mikaelbr/node-notifier)
-- [ ] Get textarea to refocus after focus is lost
+- [x] Add notifications (https://github.com/mikaelbr/node-notifier)
+- [ ] Add images to the notifications
+- [x] Get textarea to refocus after focus is lost
 - [ ] Get access token rather than hard code it
-- [ ] Add support for group messages
+- [ ] indicate focus change (highlight the border of the active box)
+- [X] Add support for group messages
 - [ ] Add support for MMS messages (perhaps a link?)
 - [ ] Tons more

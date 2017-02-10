@@ -13,6 +13,7 @@
     "lodash": "^4.17.4",
     "node-notifier": "^5.0.2",
     "open": "0.0.5",
+    "pushbullet": "^2.0.0",
     "unirest": "^0.5.1"
   }
 }
