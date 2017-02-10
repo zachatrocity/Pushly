@@ -27,7 +27,7 @@ Thats about it.
 - [ ] Hookup the stream/socket (https://docs.pushbullet.com/#realtime-event-stream)
 - [ ] Add support for encryption
 - [x] Modularize the code into multiple files
-- [ ] Add linebreaks to messages
+- [x] Add linebreaks to messages
 - [ ] Add notifications (https://github.com/mikaelbr/node-notifier)
 - [ ] Get textarea to refocus after focus is lost
 - [ ] Get access token rather than hard code it
