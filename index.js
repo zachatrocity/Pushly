@@ -14,8 +14,9 @@ var TextField = require('./ui/TextField');
 var threads = [[ 'ID', 'Name',  'Message',  'Time']];
 var thread_lookup = {};
 var activeThreadId = '';
-var ACCESS_TOKEN = 'o.2VHAXKj16SYnTIaBW3Wwu8IMDHs7J4oB'
-var TARGET_DEVICE = 'ujv5QM4Sl7QsjzW4aHTNF6';
+var ACCESS_TOKEN = 'ACCESS TOKEN HERE'
+var TARGET_DEVICE = 'TARGET DEVICE HERE';
+var SOURCE_IDEN = 'SOURCE IDEN HERE';
 
 var pusher = new PushBullet(ACCESS_TOKEN);
 var stream = pusher.stream();
@@ -174,7 +175,7 @@ function sendMessage(e, i){
             "conversation_iden": recipient,
             "message": msg,
             "package_name": "com.pushbullet.android",
-            "source_user_iden": "ujv5QM4Sl7Q",
+            "source_user_iden": SOURCE_IDEN,
             "target_device_iden": TARGET_DEVICE,
             "type": "messaging_extension_reply"
         },
