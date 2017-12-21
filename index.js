@@ -14,9 +14,9 @@ var TextField = require('./ui/TextField');
 var threads = [[ 'ID', 'Name',  'Message',  'Time']];
 var thread_lookup = {};
 var activeThreadId = '';
-var ACCESS_TOKEN = 'ACCESS TOKEN HERE'
-var TARGET_DEVICE = 'TARGET DEVICE HERE';
-var SOURCE_IDEN = 'SOURCE IDEN HERE';
+var ACCESS_TOKEN = 'o.2VHAXKj16SYnTIaBW3Wwu8IMDHs7J4oB'
+var TARGET_DEVICE = 'ujv5QM4Sl7QsjzW4aHTNF6';
+var SOURCE_IDEN = 'ujv5QM4Sl7Q';
 
 var pusher = new PushBullet(ACCESS_TOKEN);
 var stream = pusher.stream();
@@ -57,6 +57,7 @@ stream.on('push', function(push) {
             break;
     }
 
+    refreshMessagesForThread(activeThreadId);
     notifier.notify({
         'title': title,
         'message': body,
@@ -126,7 +127,12 @@ thread_table.on('select', function(elm, index){
     var idRegex = /(\d+)/g;
     var thread_id = idRegex.exec(elm._clines[0].trim())[1];
     message_table.clearItems();
-    unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_thread_' + thread_id)
+    activeThreadId = thread_id;
+    refreshMessagesForThread(thread_id);
+})
+
+function refreshMessagesForThread(id){
+    unirest.get('https://api.pushbullet.com/v2/permanents/' + TARGET_DEVICE + '_thread_' + id)
     .headers({'Access-Token': ACCESS_TOKEN, 'Content-Type': 'application/json'})
     .send()
     .end(function (response) {
@@ -148,7 +154,7 @@ thread_table.on('select', function(elm, index){
                     }
                 }
                 var recipient_idx = response.body.thread[index].recipient_index != undefined ? response.body.thread[index].recipient_index : 0;
-                name = thread_lookup[thread_id].recipients[recipient_idx].name;
+                name = thread_lookup[activeThreadId].recipients[recipient_idx].name;
                 
                 var items = ("{#4CD964-fg}" + name + "{/}: " + msg).match(new RegExp('.{1,' + (message_table.width - 1) + '}', 'g'));
                 for (var i = 0; i < items.length; i++){
@@ -157,14 +163,13 @@ thread_table.on('select', function(elm, index){
             }
         }
         message_table.setLabel({text:'Message with ' + name,side:'left'})
-        activeThreadId = thread_id;
         message_table.focus();
         message_table.render();
         message_table.setScrollPerc(100);
         text_input.readInput();
         screen.render();
     });
-})
+}
 
 function sendMessage(e, i){
     var msg = text_input.getContent().trim();
@@ -198,8 +203,9 @@ function sendMessage(e, i){
 
 }
 
-screen.key('q', function() {
+screen.key('C-c', function() {
   return screen.destroy();
+  process.exit()
 });
 
 screen.render();
